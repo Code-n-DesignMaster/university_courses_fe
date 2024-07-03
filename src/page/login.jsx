@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useLoginMutation } from '../service/authService';
 
-const Login = () => {
+const Login = ({ setToken, setUser }) => {
 	const [username, setUsername] = useState('');
 	const [password, setPassword] = useState('');
 	const loginMutation = useLoginMutation();
@@ -10,6 +10,13 @@ const Login = () => {
 		event.preventDefault();
 		loginMutation.mutate({ username, password });
 	};
+
+	useEffect(() => {
+		if (loginMutation.data) {
+			setToken(loginMutation.data.token);
+			setUser(loginMutation.data.user);
+		}
+	}, [loginMutation.data, setToken, setUser]);
 
 	return (
 		<form onSubmit={handleSubmit}>
